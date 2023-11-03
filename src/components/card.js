@@ -4,7 +4,7 @@ const cardTemplate = document.querySelector("#card-template").content;
 
 // Функция создания карточки путем клонирования темплейта
 
-export function createCard(card, deleteFunction, openPopupCardFunc, likeFunc) {
+export function createCard(card, deleteFunc, openPopupCardFunc, likeFunc) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const cardImage = cardElement.querySelector(".card__image");
@@ -15,7 +15,7 @@ export function createCard(card, deleteFunction, openPopupCardFunc, likeFunc) {
   cardImage.alt = card.name;
   cardTitle.textContent = card.name;
 
-  deleteButton.addEventListener("click", deleteFunction);
+  deleteButton.addEventListener("click", deleteFunc);
   cardImage.addEventListener('click', openPopupCardFunc);
   cardLikeButton.addEventListener('click', likeFunc);
 
@@ -29,3 +29,11 @@ export function deleteCard(evt) {
   const card = evt.target.closest(".card");
   card.remove();
 }
+
+
+// Коллбэк добавления лайка
+
+export function likeCard(evt) {
+    evt.target.classList.toggle("card__like-button_is-active");
+}
+  

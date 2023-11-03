@@ -2,7 +2,7 @@
 import "../pages/index.css";
 import { initialCards } from "../components/cards";
 import { openPopup, closePopup } from "../components/modal";
-import { createCard, deleteCard } from "../components/card";
+import { createCard, deleteCard, likeCard } from "../components/card";
 
 /*-----------------------------------------------------------------------------------
     КОНСТАНТЫ И ПЕРЕМЕННЫЕ
@@ -103,17 +103,9 @@ function openPopupImage(evt) {
 
 
 
-// Коллбэк добавления лайка
-
-function likeCard(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
-}
-
-
-
 // Коллбэк сохранения данных формы изменения профиля
 
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   profileName.textContent = popupProfileNameInput.value;
@@ -124,7 +116,7 @@ function handleFormSubmit(evt) {
 
 // Слушатель клика по кнопке сохранения формы профиля
 
-popupProfileForm.addEventListener('submit', handleFormSubmit);
+popupProfileForm.addEventListener('submit', handleProfileFormSubmit);
 
 
 
