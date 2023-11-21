@@ -3,6 +3,7 @@ import "../pages/index.css";
 import { initialCards } from "../components/cards";
 import { openPopup, closePopup } from "../components/modal";
 import { createCard, deleteCard, likeCard } from "../components/card";
+import { enableValidation, clearValidation } from "../components/validation";
 
 /*-----------------------------------------------------------------------------------
     КОНСТАНТЫ И ПЕРЕМЕННЫЕ
@@ -46,6 +47,14 @@ const popupCardName = document.querySelector(".popup__caption");
 
 const closeButtons = document.querySelectorAll('.popup__close');
 
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
 
 /*-----------------------------------------------------------------------------------
     
@@ -58,7 +67,9 @@ initialCards.forEach((item) => {
   cardsList.append(createCard(item, deleteCard, openPopupImage, likeCard));
 });
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+enableValidation(validationConfig);
 
 // Слушатель клика по кнопке редактирования профиля
 
@@ -66,18 +77,18 @@ profileEditButton.addEventListener("click", () => {
   popupProfileNameInput.value = profileName.textContent;
   popupProfileDescriptionInput.value = profileDescription.textContent;
 
+  clearValidation(popupProfileForm, validationConfig);
   openPopup(popupProfile);
 });
-
-
 
 // Слушатель клика по кнопке добавления карточки
 
 newCardButton.addEventListener("click", () => {
+  popupAddCardForm.reset();
+
+  clearValidation(popupAddCard, validationConfig);
   openPopup(popupAddCard);
 });
-
-
 
 // Слушатель закрытия на все кнопки попапов
 
@@ -89,8 +100,6 @@ closeButtons.forEach(item => {
   })
 })
 
-
-
 // Функция открытия попапа с изображением
 
 function openPopupImage(evt) {
@@ -100,8 +109,6 @@ function openPopupImage(evt) {
 
   openPopup(popupCard);
 }
-
-
 
 // Коллбэк сохранения данных формы изменения профиля
 
@@ -117,8 +124,6 @@ function handleProfileFormSubmit(evt) {
 // Слушатель клика по кнопке сохранения формы профиля
 
 popupProfileForm.addEventListener('submit', handleProfileFormSubmit);
-
-
 
 // Коллбэк сохранения данных формы добавления карточки
 
@@ -138,3 +143,4 @@ function handleCardFormSubmit(evt) {
 // Слушатель клика по кнопке сохранения формы добавления карточки
 
 popupAddCardForm.addEventListener('submit', handleCardFormSubmit);
+

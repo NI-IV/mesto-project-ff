@@ -1,0 +1,15 @@
+.popup__error {
+    display: block;
+    opacity: 0;
+    font-size: 9px;
+    color: #FF0000;
+    position: absolute;
+}
+  
+.popup__error_visible {
+    opacity: 1;
+}
+
+.popup__error:last-of-type {
+    margin-block-start: 5px;
+}
