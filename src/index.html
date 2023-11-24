@@ -25,9 +25,9 @@
             style="background-image: url(<%=require('./images/avatar.jpg')%>)"
           ></div>
           <div class="profile__info">
-            <h1 class="profile__title">Жак-Ив Кусто</h1>
+            <h1 class="profile__title"></h1>
             <button class="profile__edit-button" type="button"></button>
-            <p class="profile__description">Исследователь океана</p>
+            <p class="profile__description"></p>
           </div>
           <button class="profile__add-button" type="button"></button>
         </section>
@@ -118,18 +118,32 @@
           <p class="popup__caption"></p>
         </div>
       </div>
+      <div class="popup popup_delete-image">
+        <div class="popup__content">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Вы уверены?</h3>
+          <form class="popup__form" name="delete-card">
+            <button type="submit" class="button popup__button" data-card-id="">
+              Да
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
 
     <!--Относится к реализации 4-го спринта-->
     <template id="card-template">
       <!--Про тег темплейт студенты узнают из уроков 4-го спринта-->
-      <li class="places__item card">
+      <li class="places__item card" id="">
         <img class="card__image" src="" alt="" />
         <button type="button" class="card__delete-button"></button>
         <!--Фоновое, инлайном-->
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
+          <div class="card__like-wrapper">
+            <button type="button" class="card__like-button"></button>
+            <p class="card__like-counter"></p>
+          </div>
         </div>
       </li>
     </template>
