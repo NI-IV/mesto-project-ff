@@ -10,7 +10,6 @@
 */
 
 // Добавление классов ошибок валидации
-
 function showInputError(formElement, inputElement, errorMessage, validationConfig) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
@@ -20,7 +19,6 @@ function showInputError(formElement, inputElement, errorMessage, validationConfi
 }
 
 // Удаление классов ошибок валидации
-
 function hideInputError(formElement, inputElement, validationConfig) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
@@ -30,7 +28,6 @@ function hideInputError(formElement, inputElement, validationConfig) {
 }
 
 // Проверка на валидность отдельного input
-
 function isValid(formElement, inputElement, validationConfig) {
 
     // Добавление кастомного сообщения ошибки
@@ -50,7 +47,6 @@ function isValid(formElement, inputElement, validationConfig) {
 }
 
 // Добавление слушателя ввода на каждый input формы
-
 function setEventListeners(formElement, validationConfig) {
     const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
@@ -66,7 +62,6 @@ function setEventListeners(formElement, validationConfig) {
 }
 
 // Добавление setEventListeners на каждую форму
-
 export function enableValidation(validationConfig) {
     const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
     formList.forEach((formElement) => {
@@ -79,7 +74,6 @@ export function enableValidation(validationConfig) {
 
 // Проверка валидности каждого input в форме
 // для валидации всех полей
-
 function hasInvalidInput(inputList) {
     return inputList.some(item => {
         return !item.validity.valid;
@@ -88,8 +82,6 @@ function hasInvalidInput(inputList) {
 
 // Добавление и удаление класса disabled для кнопки формы
 // при проверке валидации всех полей формы
-
-
 function toogleButtonState(inputList, buttonElement, validationConfig) {
     if (hasInvalidInput(inputList)) {
         buttonElement.classList.add(validationConfig.inactiveButtonClass);
@@ -98,10 +90,11 @@ function toogleButtonState(inputList, buttonElement, validationConfig) {
     }
 }
 
-// Удаляет классы ошибок валидации при повторном открытии попапа с формой
-// (если были ошибки валидации и попап закрыли - при повторном открытии 
-// нужно очистить ошибки валидации и очистить форму)
-
+/**
+ * Удаляет классы ошибок валидации при повторном открытии попапа с формой
+ * (если были ошибки валидации и попап закрыли - при повторном открытии  
+ * нужно очистить ошибки валидации и очистить форму)
+ */
 export function clearValidation(profileForm, validationConfig) {
     const buttonElement = profileForm.querySelector(validationConfig.submitButtonSelector);
     buttonElement.classList.add(validationConfig.inactiveButtonClass);

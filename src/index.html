@@ -20,10 +20,7 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <div
-            class="profile__image"
-            style="background-image: url(<%=require('./images/avatar.jpg')%>)"
-          ></div>
+          <div class="profile__image"></div>
           <div class="profile__info">
             <h1 class="profile__title"></h1>
             <button class="profile__edit-button" type="button"></button>
@@ -72,7 +69,7 @@
             />
             <span class="profile-description-input-error popup__error"></span>
             <!--Можно добавить required, они про него знают-->
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button" data-button-text="Сохранить">
               Сохранить
             </button>
           </form>
@@ -105,7 +102,7 @@
               required
             />
             <span class="new-card-url-error popup__error"></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button" data-button-text="Сохранить">
               Сохранить
             </button>
           </form>
@@ -123,7 +120,27 @@
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Вы уверены?</h3>
           <form class="popup__form" name="delete-card">
-            <button type="submit" class="button popup__button" data-card-id="">
+            <button type="submit" class="button popup__button" data-card-id="" data-button-text="Да">
+              Да
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="popup popup_avatar">
+        <div class="popup__content">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Обновить аватар?</h3>
+          <form class="popup__form" name="change-avatar">
+            <input
+              id="change-avatar-url"
+              type="url"
+              name="link"
+              class="popup__input popup__input_type_url"
+              placeholder="Ссылка на аватар"
+              required
+            />
+            <span class="change-avatar-url-error popup__error"></span>
+            <button type="submit" class="button popup__button" data-button-text="Да">
               Да
             </button>
           </form>

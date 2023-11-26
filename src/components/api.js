@@ -10,7 +10,6 @@ const config = {
  * Базовая реализация GET запроса
  * @param { string } uri частичный путь после базового адреса
  */
-
 export function get(uri) {
   return fetch(config.baseUrl + uri, {
     headers: config.headers,
@@ -23,7 +22,6 @@ export function get(uri) {
  * @param { object } data данные, передаваемые на сервер
  * @param { string } method HTTP метод запроса
  */
-
 export function post(uri, data, method = "POST") {
   return fetch(config.baseUrl + uri, {
     method,
@@ -38,7 +36,6 @@ export function post(uri, data, method = "POST") {
  * @return {Promise} в then всегда будет результат
  * @reject {status, error} в catch всегда будет ошибка
  */
-
 const handleResponse = (response) => {
   if (response.ok) {
     return response.json();

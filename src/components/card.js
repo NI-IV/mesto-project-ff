@@ -3,7 +3,6 @@ import { post } from "./api";
 const cardTemplate = document.querySelector("#card-template").content;
 
 // Функция создания карточки путем клонирования темплейта
-
 export function createCard(card, deleteFunc, openPopupCardFunc, likeFunc, myId) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -52,7 +51,6 @@ export function createCard(card, deleteFunc, openPopupCardFunc, likeFunc, myId) 
 }
 
 // Коллбэк добавления лайка
-
 export function likeCard(card, myId) {
 
   // Находим элементы по ID
@@ -105,7 +103,6 @@ export function likeCard(card, myId) {
 }
 
 // Проверка моего лайка в массиве лайков карточки
-
 function checkMyLike(card, myId) {
   return card.likes.some(item => item['_id'] === myId);
 }
