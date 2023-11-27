@@ -3,7 +3,7 @@
     Не передается в качестве параметра, так как 
     предполагается использование только в этом файле, 
     поэтому вызывается из глобальной области видимости 
-*/ 
+*/
 const config = {
   openPopupClass: "popup_is-opened",
   animatedPopupClass: "popup_is-animated",
@@ -20,7 +20,12 @@ export function openPopup(popup) {
   }, 0);
 
   document.addEventListener("keydown", closePopupByESC);
-  document.addEventListener("mousedown", closePopupByOverlay);
+
+  /**
+   *  Изменено на попап. Согласен с решением повесить на попап один раз,
+   *  но данное решение было дано в задании как обязательное, поэтому пока оставляю так.
+   */
+  popup.addEventListener("mousedown", closePopupByOverlay);
 }
 
 // Функция закрытия попапа
@@ -34,7 +39,7 @@ export function closePopup(popup) {
   }, 600);
 
   document.removeEventListener("keydown", closePopupByESC);
-  document.removeEventListener("mousedown", closePopupByOverlay);
+  popup.removeEventListener("mousedown", closePopupByOverlay);
 }
 
 // Функция закрытия попапа кнопкой ESC

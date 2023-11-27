@@ -2,7 +2,14 @@ import "../pages/index.css";
 import { openPopup, closePopup } from "../components/modal";
 import { createCard, likeCard } from "../components/card";
 import { enableValidation, clearValidation } from "../components/validation";
-import { get, post } from "../components/api";
+import {
+  deleteCardRequest,
+  addCardRequest,
+  changeProfileInfoRequest,
+  changeAvatarRequest,
+  getMyInfoRequest,
+  getCardsRequest,
+} from "../components/api";
 
 /*-----------------------------------------------------------------------------------
     КОНСТАНТЫ И ПЕРЕМЕННЫЕ
@@ -24,21 +31,21 @@ const profileImage = document.querySelector(".profile__image");
 const popupAvatar = document.querySelector(".popup_avatar");
 const popupAvatarForm = document.forms["change-avatar"];
 const popupAvatarLinkInput = popupAvatarForm.elements.link;
-const popupAvatarButton = popupAvatar.querySelector('.popup__button');
+const popupAvatarButton = popupAvatar.querySelector(".popup__button");
 
 // Попап ПРОФИЛЬ
 const popupProfile = document.querySelector(".popup_type_edit");
 const popupProfileForm = document.forms["edit-profile"];
 const popupProfileNameInput = popupProfileForm.elements.name;
 const popupProfileDescriptionInput = popupProfileForm.elements.description;
-const popupProfileButton = popupProfile.querySelector('.popup__button');
+const popupProfileButton = popupProfile.querySelector(".popup__button");
 
 // Попап НОВАЯ КАРТОЧКА
 const popupAddCard = document.querySelector(".popup_type_new-card");
 const popupAddCardForm = document.forms["new-place"];
 const popupAddCardNameInput = popupAddCardForm.elements["place-name"];
 const popupAddCardLinkInput = popupAddCardForm.elements.link;
-const popupAddCardButton = popupAddCard.querySelector('.popup__button');
+const popupAddCardButton = popupAddCard.querySelector(".popup__button");
 
 // Попап КАРТОЧКА
 const popupCard = document.querySelector(".popup_type_image");
@@ -70,7 +77,7 @@ export let accountId = "";
 */
 
 // Вывод карточке на страницу
-Promise.all([get("/cards"), get("/users/me")])
+Promise.all([getCardsRequest(), getMyInfoRequest()])
   .then((request) => {
     // Получаем ID моего аккаунта
     accountId = request[1]["_id"];
@@ -96,6 +103,9 @@ enableValidation(validationConfig);
 
 // Слушатель клика по кнопке редактирования аватара
 profileImage.addEventListener("click", () => {
+  popupAvatarForm.reset();
+
+  clearValidation(popupAvatar, validationConfig);
   openPopup(popupAvatar);
 });
 
@@ -118,9 +128,8 @@ newCardButton.addEventListener("click", () => {
 
 // Слушатель закрытия на все кнопки попапов
 closeButtons.forEach((item) => {
-  item.addEventListener("click", (evt) => {
-    const popup = evt.target.closest(".popup");
-
+  const popup = item.closest(".popup");
+  item.addEventListener("click", () => {
     closePopup(popup);
   });
 });
@@ -139,24 +148,17 @@ function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   renderSaving(true, popupAvatarButton);
 
-  post(
-    "/users/me/avatar",
-    {
-      avatar: popupAvatarLinkInput.value,
-    },
-    "PATCH"
-  )
+  changeAvatarRequest(popupAvatarLinkInput)
     .then((res) => {
       profileImage.style = `background-image: url('${res.avatar}')`;
+
+      closePopup(popupAvatar);
+      popupAvatarForm.reset();
     })
     .catch((err) => console.log(err))
     .finally(() => {
       renderSaving(false, popupAvatarButton);
-      closePopup(popupAvatar);
-      popupAvatarForm.reset();
-    })
-
-  
+    });
 }
 
 // Слушатель клика по кнопке сохранения формы добавления аватара
@@ -168,23 +170,17 @@ function handleProfileFormSubmit(evt) {
   renderSaving(true, popupProfileButton);
 
   // POST запрос добавления имени и описания
-  post(
-    "/users/me",
-    {
-      name: popupProfileNameInput.value,
-      about: popupProfileDescriptionInput.value,
-    },
-    "PATCH"
-  )
+  changeProfileInfoRequest(popupProfileNameInput, popupProfileDescriptionInput)
     .then((res) => {
       profileName.textContent = res.name;
       profileDescription.textContent = res.about;
+
+      closePopup(popupProfile);
     })
     .catch((err) => console.log(err))
     .finally(() => {
       renderSaving(false, popupProfileButton);
-      closePopup(popupProfile);
-    })
+    });
 }
 
 // Слушатель клика по кнопке сохранения формы профиля
@@ -196,51 +192,58 @@ function handleCardFormSubmit(evt) {
   renderSaving(true, popupAddCardButton);
 
   // POST запрос добавления новой карточки
-  post("/cards", {
-    name: popupAddCardNameInput.value,
-    link: popupAddCardLinkInput.value,
-  })
+  addCardRequest(popupAddCardNameInput, popupAddCardLinkInput)
     .then((card) => {
       cardsList.prepend(
         createCard(card, deleteMyCard, openPopupImage, likeCard, accountId)
       );
+
+      closePopup(popupAddCard);
+      popupAddCardForm.reset();
     })
     .catch((err) => console.log(err))
     .finally(() => {
       renderSaving(false, popupAddCardButton);
-      closePopup(popupAddCard);
-      popupAddCardForm.reset();
-    })
+    });
 }
 
 // Слушатель клика по кнопке сохранения формы добавления карточки
 popupAddCardForm.addEventListener("submit", handleCardFormSubmit);
 
-// Удаление карточки с сервера
+// Открытие подтверждения удаления картинки
 function deleteMyCard(card) {
   openPopup(popupDeleteCard);
 
   // Присваиваем ID удаляемой карточки в попап подтверждения
-  const cardId = (popupDeleteCardButton.dataset.cardId = card["_id"]);
-
-  popupDeleteCardButton.addEventListener("click", () => {
-    // Удаляем с сервера
-    post(`/cards/${cardId}`, {}, "DELETE")
-      .then(() => {
-        // Через ID на карточках в списке HTML удаляем со страницы
-        const deleteCard = document.getElementById(cardId);
-        popupDeleteCardButton.dataset.cardId = "";
-        deleteCard.remove();
-        closePopup(popupDeleteCard);
-      })
-      .catch((err) => console.log(err));
-  });
+  popupDeleteCardButton.dataset.cardId = card["_id"];
 }
+
+// Коллбэк удаления карточки
+function handleDeleteClick(evt) {
+  evt.preventDefault();
+
+  // Присваиваем ID удаляемой карточки в попап подтверждения
+  const cardId = popupDeleteCardButton.dataset.cardId;
+  // Удаляем с сервера
+  deleteCardRequest(cardId)
+    .then(() => {
+      // Через ID на карточках в списке HTML удаляем со страницы
+      const deleteCard = document.getElementById(cardId);
+
+      deleteCard.remove();
+      popupDeleteCardButton.dataset.cardId = "";
+      closePopup(popupDeleteCard);
+    })
+    .catch((err) => console.log(err));
+}
+
+// Удаление карточки при подтверждении popup
+popupDeleteCardButton.addEventListener("click", handleDeleteClick);
 
 // Функция уведомления о сохранении
 function renderSaving(isLoading, button) {
   if (isLoading) {
-    button.textContent = 'Сохранение...';
+    button.textContent = "Сохранение...";
   } else {
     button.textContent = button.dataset.buttonText;
   }
