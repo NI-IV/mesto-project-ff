@@ -1,5 +1,9 @@
 import "../pages/index.css";
-import { openPopup, closePopup } from "../components/modal";
+import {
+  openPopup,
+  closePopup,
+  closePopupByOverlay,
+} from "../components/modal";
 import { createCard, likeCard } from "../components/card";
 import { enableValidation, clearValidation } from "../components/validation";
 import {
@@ -58,6 +62,9 @@ const popupDeleteCardButton = popupDeleteCard.querySelector(".popup__button");
 
 // Кнопки закрытия попапов
 const closeButtons = document.querySelectorAll(".popup__close");
+
+// Все попапы
+const popupsList = document.querySelectorAll(".popup");
 
 // Config для валидации форм
 const validationConfig = {
@@ -126,6 +133,11 @@ newCardButton.addEventListener("click", () => {
   openPopup(popupAddCard);
 });
 
+// Слушатель закрытия по оверлею на все попапы
+popupsList.forEach((item) => {
+  item.addEventListener("mousedown", closePopupByOverlay);
+});
+
 // Слушатель закрытия на все кнопки попапов
 closeButtons.forEach((item) => {
   const popup = item.closest(".popup");
@@ -148,7 +160,7 @@ function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
   renderSaving(true, popupAvatarButton);
 
-  changeAvatarRequest(popupAvatarLinkInput)
+  changeAvatarRequest(popupAvatarLinkInput.value)
     .then((res) => {
       profileImage.style = `background-image: url('${res.avatar}')`;
 
@@ -170,7 +182,10 @@ function handleProfileFormSubmit(evt) {
   renderSaving(true, popupProfileButton);
 
   // POST запрос добавления имени и описания
-  changeProfileInfoRequest(popupProfileNameInput, popupProfileDescriptionInput)
+  changeProfileInfoRequest(
+    popupProfileNameInput.value,
+    popupProfileDescriptionInput.value
+  )
     .then((res) => {
       profileName.textContent = res.name;
       profileDescription.textContent = res.about;
@@ -192,7 +207,7 @@ function handleCardFormSubmit(evt) {
   renderSaving(true, popupAddCardButton);
 
   // POST запрос добавления новой карточки
-  addCardRequest(popupAddCardNameInput, popupAddCardLinkInput)
+  addCardRequest(popupAddCardNameInput.value, popupAddCardLinkInput.value)
     .then((card) => {
       cardsList.prepend(
         createCard(card, deleteMyCard, openPopupImage, likeCard, accountId)

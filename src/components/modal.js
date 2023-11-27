@@ -14,18 +14,11 @@ export function openPopup(popup) {
   popup.classList.add(config.animatedPopupClass);
 
   // Добавляем таймаут для добавления класса после анимации
-
   setTimeout(() => {
     popup.classList.add(config.openPopupClass);
   }, 0);
 
   document.addEventListener("keydown", closePopupByESC);
-
-  /**
-   *  Изменено на попап. Согласен с решением повесить на попап один раз,
-   *  но данное решение было дано в задании как обязательное, поэтому пока оставляю так.
-   */
-  popup.addEventListener("mousedown", closePopupByOverlay);
 }
 
 // Функция закрытия попапа
@@ -33,13 +26,11 @@ export function closePopup(popup) {
   popup.classList.remove(config.openPopupClass);
 
   // Откладываем удаление на время работы анимации
-
   setTimeout(() => {
     popup.classList.remove(config.animatedPopupClass);
   }, 600);
 
   document.removeEventListener("keydown", closePopupByESC);
-  popup.removeEventListener("mousedown", closePopupByOverlay);
 }
 
 // Функция закрытия попапа кнопкой ESC
@@ -52,7 +43,7 @@ function closePopupByESC(evt) {
 }
 
 // Функция закрытия попапа по оверлэю
-function closePopupByOverlay(evt) {
+export function closePopupByOverlay(evt) {
   if (evt.target.classList.contains(config.openPopupClass)) {
     closePopup(evt.target);
   }

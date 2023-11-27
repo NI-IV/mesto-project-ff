@@ -55,14 +55,14 @@ export function deleteCardRequest(cardId) {
 
 /**
  * Добавление новой карточки на сервер
- * @param { string } inputName
- * @param { string } inputLink
+ * @param { string } name
+ * @param { string } link
  * @returns { Promise }
  */
-export function addCardRequest(inputName, inputLink) {
+export function addCardRequest(cardName, cardLink) {
   return post("/cards", {
-    name: inputName.value,
-    link: inputLink.value,
+    name: cardName,
+    link: cardLink,
   });
 }
 
@@ -72,12 +72,12 @@ export function addCardRequest(inputName, inputLink) {
  * @param { string } inputDescription
  * @returns { Promise }
  */
-export function changeProfileInfoRequest(inputName, inputDescription) {
+export function changeProfileInfoRequest(profileName, profileDescription) {
   return post(
     "/users/me",
     {
-      name: inputName.value,
-      about: inputDescription.value,
+      name: profileName,
+      about: profileDescription,
     },
     "PATCH"
   );
@@ -92,7 +92,7 @@ export function changeAvatarRequest(inputLink) {
   return post(
     "/users/me/avatar",
     {
-      avatar: inputLink.value,
+      avatar: inputLink,
     },
     "PATCH"
   );
